@@ -410,6 +410,64 @@
       transform: scale(1.02);
       box-shadow: 0 8px 16px var(--shadow);
     }
+
+    /* ——— Gallery Section ——— */
+    .gallery-section {
+      padding: 2em 0;
+    }
+    .gallery-section h2 {
+      text-align: center;
+      color: var(--neon);
+      margin: 1.5em auto 1em;
+      position: relative;
+      display: inline-block;
+      padding-bottom: 15px;
+    }
+    .gallery-section h2::after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 25%;
+      width: 50%;
+      height: 2px;
+      background: var(--neon);
+    }
+    .gallery-section .container {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+    .gallery-card {
+      background: var(--card-bg);
+      border-radius: var(--radius);
+      padding: 1.5em;
+      box-shadow: 0 6px 16px var(--shadow);
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(255,255,255,0.7);
+      margin-bottom: 1.5em;
+      transition: transform .3s, box-shadow .3s;
+      width: 100%;
+      max-width: 800px;
+    }
+    .gallery-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 10px 20px var(--shadow);
+    }
+    .gallery-card h3 {
+      color: var(--neon);
+      margin-bottom: 1em;
+      text-align: center;
+    }
+    .gallery-card img {
+      width: 100%;
+      border-radius: var(--radius);
+      box-shadow: 0 4px 8px var(--shadow);
+      transition: transform .3s, box-shadow .3s;
+    }
+    .gallery-card img:hover {
+      transform: scale(1.02);
+      box-shadow: 0 8px 16px var(--shadow);
+    }
   </style>
 </head>
 <body>
@@ -538,6 +596,57 @@
       <h2>Rehabilitation Assistant</h2>
       <iframe src="https://www.youtube.com/embed/26BGSddgL1s" title="Demo Video" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
     </div>
+
+    <section class="gallery-section">
+      <div class="container">
+        <h2>Project Gallery</h2>
+        
+        <div class="gallery-card">
+          <h3>Our final project, including casework and interfacing elements</h3>
+          <img src="images/Setup_Explained.jpg" alt="Project Overview - Full Setup">
+        </div>
+        
+        <div class="gallery-card">
+          <h3>The standalone PCBA, top</h3>
+          <img src="images/T20A_Board1.jpg" alt="PCB Top View">
+        </div>
+        
+        <div class="gallery-card">
+          <h3>The standalone PCBA, bottom</h3>
+          <img src="images/T20A_Board3.jpg" alt="PCB Bottom View">
+        </div>
+        
+        <div class="gallery-card">
+          <h3>Thermal camera images while the board is running under load</h3>
+          <img src="images/thermal_image.jpeg" alt="Thermal Camera Image">
+        </div>
+        
+        <div class="gallery-card">
+          <h3>The Altium Board design in 2D view</h3>
+          <img src="images/T20_Altium_PCB2D.jpg" alt="PCB 2D Design">
+        </div>
+        
+        <div class="gallery-card">
+          <h3>The Altium Board design in 3D view</h3>
+          <img src="images/T20_Altium_PCB3D.jpg" alt="PCB 3D Design">
+        </div>
+        
+        <div class="gallery-card">
+          <h3>Node-RED dashboard (screenshot)</h3>
+          <img src="images/NodeRed.jpg" alt="Node-RED Dashboard">
+        </div>
+        
+        <div class="gallery-card">
+          <h3>Node-RED backend (screenshot)</h3>
+          <img src="images/NodeRed_backend.jpg" alt="Node-RED Backend">
+        </div>
+        
+        <div class="gallery-card">
+          <h3>Block diagram of our system</h3>
+          <img src="images/ESE5160_BlockDiagram.jpg" alt="System Block Diagram">
+        </div>
+      </div>
+    </section>
 
   </div>
 
