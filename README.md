@@ -187,7 +187,7 @@ Node-RED dashboard (screenshot)
 
 Node-RED backend (screenshot)
 
-![NR2](images/NodeRed_backend.jpg)
+![NR2](images/NodeRed_backend.png)
 
 
 Block diagram of your system (You may need to update this to reflect changes throughout the semester.)
