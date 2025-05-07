@@ -222,6 +222,28 @@
       box-shadow: 0 8px 16px var(--shadow);
     }
 
+    .hero-description {
+      max-width: 800px;
+      margin: 1.5em auto 0;
+      padding: 1em;
+      background: rgba(255, 255, 255, 0.6);
+      border-radius: var(--radius);
+      backdrop-filter: blur(5px);
+      border: 1px solid rgba(255, 255, 255, 0.8);
+      box-shadow: 0 4px 12px var(--shadow);
+      transition: transform 0.3s, box-shadow 0.3s;
+      animation: fadeInUp 1s ease-out both 0.6s;
+    }
+    .hero-description p {
+      font-size: 1.1em;
+      line-height: 1.6;
+      color: #483d8b;
+    }
+    .hero-description:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 8px 16px var(--shadow);
+    }
+
     /* ——— Footer ——— */
     footer {
       text-align: center;
@@ -334,6 +356,9 @@
     </div>
     <p>Team 20 "The Ohmies"</p>
     <p>Megha Mistry &amp; Kevin Wang</p>
+    <div class="hero-description">
+      <p>Our hand exoskeleton improves user grip strength and finger dexterity, assisting stroke and neurological injury patients in regaining hand mobility. The device can be triggered either via EMG signal or remote Wi-Fi control, with an emergency stop button for safety.</p>
+    </div>
   </section>
 
   <div class="container">
@@ -404,7 +429,6 @@
 
     <div class="video">
       <h2>Rehabilitation Assistant</h2>
-      <p>Our hand exoskeleton improves user grip strength and finger dexterity, assisting stroke and neurological injury patients in regaining hand mobility. The device can be triggered either via EMG signal or remote Wi-Fi control, with an emergency stop button for safety.</p>
       <iframe src="https://www.youtube.com/embed/QpCnf6vj9Dw" title="Demo Video" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
     </div>
 
