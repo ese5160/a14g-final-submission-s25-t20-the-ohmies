@@ -170,7 +170,7 @@ The standalone PCBA, bottom
 
 Thermal camera images while the board is running under load
 
-![Therm](images/thermal_image.jpg)
+![Therm](images/thermal_image.jpeg)
 
 
 The Altium Board design in 2D view 
