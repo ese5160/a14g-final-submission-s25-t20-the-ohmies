@@ -143,6 +143,26 @@
       transform: scale(1.02);
       box-shadow:0 10px 20px var(--shadow);
     }
+    .project-description {
+      background:rgba(255, 255, 255, 0.7);
+      border-radius:var(--radius);
+      padding:1.5em;
+      margin-bottom:1.5em;
+      backdrop-filter:blur(10px);
+      border:1px solid rgba(255,255,255,0.7);
+      box-shadow: 0 6px 16px var(--shadow);
+      text-align: center;
+      animation: fadeIn 1s ease-out;
+    }
+    .project-description p {
+      font-size: 1.1em;
+      line-height: 1.6;
+      color: #483d8b;
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
     footer{
       text-align:center;
       padding:1.5em 0;
@@ -170,6 +190,9 @@
   </section>
 
   <div class="container">
+    <div class="project-description">
+      <p>Our hand exoskeleton improves user grip strength and finger dexterity, assisting stroke and neurological injury patients in regaining hand mobility. The device can be triggered either via EMG signal or remote Wi-Fi control, with an emergency stop button for safety.</p>
+    </div>
 
     <div class="content">
       <h2>SRS 01 – FreeRTOS Task Scheduling</h2>
@@ -179,14 +202,22 @@
         <li>System uses FreeRTOS for effective task management.</li>
       </ul>
       <pre>
-// FreeRTOS task creation example
-xTaskCreate(
-    vEMGSamplingTask, 
-    "EMG_Sampling",
-    configMINIMAL_STACK_SIZE, 
-    NULL, 
-    tskIDLE_PRIORITY + 3, 
-    NULL);
+// From main21.c - Task creation examples
+if (xTaskCreate(vEMGTask, "EMG_TASK", EMG_TASK_SIZE, NULL, EMG_PRIORITY, &emgTaskHandle) != pdPASS) {
+    SerialConsoleWriteString("ERR: EMG task could not be initialized!\r\n");
+}
+
+if (xTaskCreate(vImuTask, "IMU_TASK", IMU_TASK_SIZE, NULL, IMU_PRIORITY, &imuTaskHandle) != pdPASS) {
+    SerialConsoleWriteString("ERR: IMU task could not be initialized!\r\n");
+}
+
+if (xTaskCreate(vServoTask, "SERVO_TASK", SERVO_TASK_SIZE, NULL, SERVO_PRIORITY, &servoTaskHandle) != pdPASS) {
+    SerialConsoleWriteString("ERR: Servo task could not be initialized!\r\n");
+}
+
+if (xTaskCreate(vWifiTask, "WIFI_TASK", WIFI_TASK_SIZE, NULL, WIFI_PRIORITY, &wifiTaskHandle) != pdPASS) {
+    SerialConsoleWriteString("ERR: WIFI task could not be initialized!\r\n");
+}
       </pre>
     </div>
 
@@ -198,13 +229,35 @@ xTaskCreate(
         <li>Verified using timing pins and oscilloscope measurements.</li>
       </ul>
       <pre>
-// EMG sampling at 1000Hz
-void vEMGSamplingTask(void *pvParameters) {
-    const TickType_t xFrequency = 1; // 1ms = 1000Hz
-    for(;;) {
-        emg_value = read_emg_sensor();
-        process_emg_data(emg_value);
-        vTaskDelay(xFrequency);
+// From EMG.c - EMG sampling task with 1000Hz sampling rate
+void vEMGTask(void *pvParameters) {
+    char buffer[64];  /* Buffer for serial output (for debugging)*/
+    
+    /* Initialize the EMG sensor on PA02 (AIN0) */
+    EMG_Init(EMG_ADC_CHANNEL);
+    
+    /* Wait a moment for initialization to complete */
+    vTaskDelay(pdMS_TO_TICKS(500));
+    
+    while (1) {
+        /* Read raw EMG value directly from ADC */
+        uint16_t raw = EMG_ReadRaw();
+        
+        /* Add to circular buffer for signal detection */
+        raw_buffer[buffer_index] = raw;
+        buffer_index = (buffer_index + 1) % EMG_BUFFER_SIZE;
+        
+        /* Check for muscle activation using threshold */
+        if (raw > EMG_THRESHOLD_RAW) {
+            emg_count++;
+            if (emg_count > EMG_ACTIVATION_COUNT && !isServoRunning) {
+                isEmgSignalDetected = true;
+                emg_count = 0;
+            }
+        }
+        
+        /* EMG sampling occurs at highest priority with 1ms delay (1000Hz) */
+        vTaskDelay(pdMS_TO_TICKS(1));
     }
 }
       </pre>
@@ -218,13 +271,31 @@ void vEMGSamplingTask(void *pvParameters) {
         <li>Verified data collection rate through timing analysis.</li>
       </ul>
       <pre>
-// IMU data collection at 100Hz
-void vIMUDataCollectionTask(void *pvParameters) {
-    const TickType_t xFrequency = 10; // 10ms = 100Hz
-    for(;;) {
-        read_imu_data(&imu_data);
-        process_motion_data(&imu_data);
-        vTaskDelay(xFrequency);
+// From imu_new.c - IMU data collection at 100Hz
+void vImuTask(void *pvParameters) {
+    // Initialize LSM6DSOX IMU sensor
+    LSM6DSOX_Init();
+    char buffer[64];
+
+    while (1) {
+        // Read accelerometer data from all three axes
+        int16_t x_raw = ReadAxis(REG_OUTX_L_A, REG_OUTX_H_A);
+        int16_t y_raw = ReadAxis(REG_OUTY_L_A, REG_OUTY_H_A);
+        int16_t z_raw = ReadAxis(REG_OUTZ_L_A, REG_OUTZ_H_A);
+        
+        // Convert raw readings to mg (milligravity)
+        int x = (int)(x_raw * ACCEL_SENSITIVITY_2G);
+        int y = (int)(y_raw * ACCEL_SENSITIVITY_2G);
+        int z = (int)(z_raw * ACCEL_SENSITIVITY_2G);
+        
+        // Package data for transmission
+        struct ImuDataPacket imuPacket;
+        imuPacket.xmg = x;
+        imuPacket.ymg = y;
+        imuPacket.zmg = z;
+        
+        // 10ms delay gives us 100Hz sampling rate
+        vTaskDelay(pdMS_TO_TICKS(10));
     }
 }
       </pre>
@@ -238,12 +309,52 @@ void vIMUDataCollectionTask(void *pvParameters) {
         <li>Measured motor update frequency with timing analysis.</li>
       </ul>
       <pre>
-// Motor control at 50Hz
-void vMotorControlTask(void *pvParameters) {
-    const TickType_t xFrequency = 20; // 20ms = 50Hz
-    for(;;) {
-        update_motor_positions(processed_emg_data);
-        vTaskDelay(xFrequency);
+// From Servo.c - Motor control task updating at 20ms (50Hz)
+void vServoTask(void *pvParameters) {
+    /* Initialize the servo */
+    Servo_Init();
+    Servo_InitButtonControl();
+    
+    /* Set initial position */
+    Servo_SetAngle(0, 0);
+    Servo_SetAngle(1, 0);
+    Servo_SetAngle(2, 0);
+    Servo_SetAngle(3, 0);
+    
+    enum ServoState {
+        IDLE,           // Not moving
+        MOVING_UP,      // Moving from 0 to 180
+        MOVING_DOWN     // Moving from 180 to 0
+    };
+    
+    enum ServoState state = IDLE;
+    uint8_t servo_angles[4] = {0, 0, 0, 0};
+    
+    while (1) {
+        // Process EMG signals or remote commands
+        if (state == IDLE) {
+            if ((!isRemoteControlled && isEmgSignalDetected) || 
+                (isRemoteControlled && isFingerCommand)) {
+                state = MOVING_UP;
+                isServoRunning = true;
+            }
+        }
+        
+        // Update servo positions based on state
+        switch (state) {
+            case MOVING_UP:
+                // Move servos up logic...
+                break;
+            case MOVING_DOWN:
+                // Move servos down logic...
+                break;
+            case IDLE:
+                // Wait for next command
+                break;
+        }
+        
+        /* 20ms delay between updates = 50Hz */
+        vTaskDelay(pdMS_TO_TICKS(20));
     }
 }
       </pre>
@@ -257,13 +368,33 @@ void vMotorControlTask(void *pvParameters) {
         <li>Monitored data transmission using timer on phone.</li>
       </ul>
       <pre>
-// Wi-Fi communication task
-void vWiFiCommunicationTask(void *pvParameters) {
-    const TickType_t xFrequency = 1000; // 1000ms = 1Hz
-    for(;;) {
-        send_data_to_cloud(sensor_data);
-        vTaskDelay(xFrequency);
+// From WifiHandler.c - Wi-Fi communication task
+static void MQTT_HandleImuMessages(void) {
+    struct ImuDataPacket imuDataVar;
+    
+    if (uxQueueMessagesWaiting(xQueueImuBuffer)) {
+        if (xQueueReceive(xQueueImuBuffer, &imuDataVar, 0)) {
+            // Format IMU data as JSON
+            sprintf((char *)mqtt_msg, "{\"d\":{\"xmg\":%d,\"ymg\":%d,\"zmg\":%d}}", 
+                    imuDataVar.xmg, imuDataVar.ymg, imuDataVar.zmg);
+            
+            // Publish to MQTT topic
+            mqtt_publish(&mqtt_inst, MAIN_MQTT_TOPIC_IMU, mqtt_msg, 
+                        strlen((char *)mqtt_msg), 0, 0);
+        }
     }
+}
+
+// In vWifiTask, this is called every second
+static void MQTT_HandleTransactions(void) {
+    // Handle IMU data
+    MQTT_HandleImuMessages();
+    
+    // Handle other data types...
+    // ...
+
+    // 1 second delay between transmissions
+    vTaskDelay(pdMS_TO_TICKS(1000));
 }
       </pre>
     </div>
@@ -276,11 +407,33 @@ void vWiFiCommunicationTask(void *pvParameters) {
         <li>Tested system response to various fault conditions.</li>
       </ul>
       <pre>
-// Interrupt handler for emergency stop
-void emergency_stop_handler(void) {
-    stop_all_motors();
-    set_system_state(EMERGENCY_STOP);
-    notify_user("EMERGENCY STOP ACTIVATED");
+// From Servo.c - Emergency stop interrupt handler
+static void servo_button_callback(void) {
+    // Set the flag to indicate button was pressed
+    isButtonPressed = true;
+}
+
+// Initialize the emergency stop button
+void Servo_InitButtonControl(void) {
+    // Register the callback function for the button interrupt
+    extint_register_callback(servo_button_callback, BUTTON_0_EIC_LINE, 
+                           EXTINT_CALLBACK_TYPE_DETECT);
+    
+    // Enable the interrupt callback
+    extint_chan_enable_callback(BUTTON_0_EIC_LINE, EXTINT_CALLBACK_TYPE_DETECT);
+}
+
+// In servo task, handling the emergency stop
+if (isButtonPressed) {
+    SerialConsoleWriteString("Button pressed - Stopping servo\r\n");
+    state = IDLE;
+    isServoRunning = false;
+    isButtonPressed = false;  // Reset the button flag
+    
+    // Immediately stop all motors
+    for (int i = 0; i < 4; i++) {
+        Servo_SetAngle(i, 0);
+    }
 }
       </pre>
     </div>
@@ -293,11 +446,26 @@ void emergency_stop_handler(void) {
         <li>Verified through concurrent access testing and logging.</li>
       </ul>
       <pre>
-// Data protection with mutex
-if (xSemaphoreTake(xDataMutex, portMAX_DELAY) == pdTRUE) {
-    // Access protected data
-    update_shared_data(new_data);
-    xSemaphoreGive(xDataMutex);
+// From WifiHandler.c - Queue-based task synchronization
+// Create queues for inter-task communication
+xQueueImuBuffer = xQueueCreate(5, sizeof(struct ImuDataPacket));
+xQueueGameBuffer = xQueueCreate(2, sizeof(struct GameDataPacket));
+xQueueDistanceBuffer = xQueueCreate(2, sizeof(uint16_t));
+xQueueWifiState = xQueueCreate(5, sizeof(uint8_t));
+
+// Function to safely add IMU data to queue from any task
+int WifiAddImuDataToQueue(struct ImuDataPacket *imuPacket) {
+    if (uxQueueSpacesAvailable(xQueueImuBuffer) > 0) {
+        if (xQueueSendToBack(xQueueImuBuffer, imuPacket, 0) == pdPASS) {
+            return 1;
+        }
+    }
+    return 0;
+}
+
+// In MQTT handler, safely receive data
+if (xQueueReceive(xQueueImuBuffer, &imuDataVar, 0)) {
+    // Process received data...
 }
       </pre>
     </div>
@@ -310,15 +478,45 @@ if (xSemaphoreTake(xDataMutex, portMAX_DELAY) == pdTRUE) {
         <li>Tested per-finger control commands on the web interface.</li>
       </ul>
       <pre>
-// Process command from web interface
-void process_web_command(WebCommand_t* cmd) {
-    switch(cmd->type) {
-        case FINGER_POSITION:
-            set_finger_position(cmd->finger_id, cmd->position);
-            break;
-        case TORQUE_LIMIT:
-            set_torque_limit(cmd->finger_id, cmd->torque);
-            break;
+// From WifiHandler.c - MQTT subscription handler for finger control
+void SubscribeHandlerFinger(MessageData *msgData) {
+    // Get the message payload
+    uint8_t *payload = msgData->message->payload;
+    payload[msgData->message->payloadlen] = '\0';
+    
+    // Parse finger commands
+    if (strstr((char *)payload, "index")) {
+        isFingerIndexCommandReceived = true;
+        isFingerCommand = true;
+        SerialConsoleWriteString("Index finger command received\r\n");
+    } 
+    else if (strstr((char *)payload, "middle")) {
+        isFingerMiddleCommandReceived = true;
+        isFingerCommand = true;
+        SerialConsoleWriteString("Middle finger command received\r\n");
+    }
+    else if (strstr((char *)payload, "ring")) {
+        isFingerRingCommandReceived = true;
+        isFingerCommand = true;
+        SerialConsoleWriteString("Ring finger command received\r\n");
+    }
+    else if (strstr((char *)payload, "pinky")) {
+        isFingerPinkyCommandReceived = true;
+        isFingerCommand = true;
+        SerialConsoleWriteString("Pinky finger command received\r\n");
+    }
+    else if (strstr((char *)payload, "all")) {
+        isFingerAllCommandReceived = true; 
+        isFingerCommand = true;
+        SerialConsoleWriteString("All fingers command received\r\n");
+    }
+    else if (strstr((char *)payload, "emgControl")) {
+        isRemoteControlled = false;
+        SerialConsoleWriteString("EMG control mode activated\r\n");
+    }
+    else if (strstr((char *)payload, "remoteControl")) {
+        isRemoteControlled = true;
+        SerialConsoleWriteString("Remote control mode activated\r\n");
     }
 }
       </pre>
@@ -332,13 +530,30 @@ void process_web_command(WebCommand_t* cmd) {
         <li>Verified motor disabling in various operational states.</li>
       </ul>
       <pre>
-// Emergency stop implementation
-void disable_all_motors(void) {
-    for (int i = 0; i < NUM_MOTORS; i++) {
-        motors[i].enabled = false;
-        set_motor_pwm(i, 0);
+// From Servo.c - Emergency stop implementation
+// Button interrupt callback
+static void servo_button_callback(void) {
+    // Set the flag to indicate emergency stop
+    isButtonPressed = true;
+}
+
+// In servo task, handling the emergency stop
+if (isButtonPressed) {
+    // Log the emergency stop
+    SerialConsoleWriteString("EMERGENCY STOP - Disabling all motors\r\n");
+    
+    // Transition to idle state
+    state = IDLE;
+    isServoRunning = false;
+    
+    // Stop all motors immediately by setting angle to 0
+    for (int i = 0; i < 4; i++) {
+        servo_angles[i] = 0;
+        Servo_SetAngle(i, 0);
     }
-    emergency_state = true;
+    
+    // Reset the button flag after handling
+    isButtonPressed = false;
 }
       </pre>
     </div>
@@ -351,15 +566,32 @@ void disable_all_motors(void) {
         <li>Measured command response time on phone timer.</li>
       </ul>
       <pre>
-// Command processing task
-void vCommandProcessingTask(void *pvParameters) {
-    for(;;) {
-        if (xQueueReceive(xCommandQueue, &receivedCommand, portMAX_DELAY) == pdPASS) {
-            // Process command immediately
-            process_command(&receivedCommand);
-            // Send acknowledgment
-            send_ack(receivedCommand.id);
-        }
+// From WifiHandler.c - MQTT callback for fast command processing
+static void mqtt_callback(struct mqtt_module *module_inst, int type, union mqtt_data *data) {
+    switch (type) {
+        case MQTT_CALLBACK_RECV_PUBLISH:
+            // Handle topic subscription
+            if (strncmp(data->recv_publish.topic, MAIN_MQTT_TOPIC_IN, 
+                         strlen(MAIN_MQTT_TOPIC_IN)) == 0) {
+                // Process immediately when message arrives
+                SubscribeHandler(&data->recv_publish);
+            }
+            else if (strncmp(data->recv_publish.topic, MAIN_MQTT_TOPIC_FINGERS,
+                              strlen(MAIN_MQTT_TOPIC_FINGERS)) == 0) {
+                // Process finger commands immediately
+                SubscribeHandlerFinger(&data->recv_publish);
+                
+                // High-priority command - trigger immediate servo task execution
+                if (isFingerCommand) {
+                    // Give servo task a higher priority temporarily for faster response
+                    vTaskPrioritySet(servoTaskHandle, SERVO_PRIORITY + 1);
+                    vTaskDelay(pdMS_TO_TICKS(1));  // Allow servo task to run
+                    vTaskPrioritySet(servoTaskHandle, SERVO_PRIORITY);  // Restore normal priority
+                }
+            }
+            break;
+            
+        // Handle other MQTT events...
     }
 }
       </pre>
@@ -373,14 +605,40 @@ void vCommandProcessingTask(void *pvParameters) {
         <li>Tested angle precision using protractor.</li>
       </ul>
       <pre>
-// Set finger position with 1-degree resolution
-void set_finger_position(uint8_t finger_id, uint8_t angle) {
-    // Constrain angle between 0-90 degrees
-    if (angle > 90) angle = 90;
+// From Servo.c - Precise finger angle control
+uint8_t Servo_SetAngle(uint8_t channel, uint8_t angle) {
+    /* Validate angle range */
+    if (angle > 180) {
+        return 1;  /* Error: angle out of range */
+    }
     
-    // Convert angle to servo position
-    uint16_t servo_pos = map(angle, 0, 90, SERVO_MIN, SERVO_MAX);
-    servo_set_position(finger_id, servo_pos);
+    /* 
+     * Calculate pulse width in microseconds based on angle:
+     * 0 degrees = 200 µs (0.2ms)
+     * 90 degrees = 2100 µs (2.1ms)
+     * 180 degrees = 4000 µs (4ms)
+     */
+    uint16_t pulse_width = SERVO_MIN_PULSE + 
+                          (angle * (SERVO_MAX_PULSE - SERVO_MIN_PULSE)) / 180;
+    
+    /* 
+     * For a 50Hz signal, period is 20ms (20,000 µs)
+     * With a TCC period of 59999 (60000 cycles):
+     * - 1ms pulse = 3000 cycles
+     * - 2ms pulse = 6000 cycles
+     */
+    uint16_t period_cycles = 60000;  /* This matches our configuration */
+    uint16_t compare_value = (pulse_width * period_cycles) / 20000;
+    
+    /* Set PWM duty cycle using TCC module */
+    tcc_set_compare_value(&tcc_instance, channel, compare_value);
+    
+    /* Update current angle if it's channel 0 (used for tracking in the task) */
+    if (channel == 0) {
+        current_angle = angle;
+    }
+    
+    return 0;  /* Success */
 }
       </pre>
     </div>
@@ -393,14 +651,36 @@ void set_finger_position(uint8_t finger_id, uint8_t angle) {
         <li>Verified protocol functionality through test commands.</li>
       </ul>
       <pre>
-// Command protocol structure
-typedef struct {
-    uint8_t cmd_type;    // Command type (ESTOP, FINGER_CTRL, etc.)
-    uint8_t finger_id;   // 0-3 for specific finger, 255 for all
-    uint8_t parameter;   // Position, torque, etc.
-    uint8_t value;       // Parameter value
-    uint16_t checksum;   // Validation checksum
-} Command_t;
+// From WifiHandler.h - Command protocol structures
+// Game data packet for communication
+struct GameDataPacket {
+    uint8_t cmd;           // Command type
+    uint8_t options[2];    // Command options/parameters
+    uint16_t  score;       // Current score or result
+    uint32_t time;         // Timestamp or time value
+};
+
+// IMU data packet for finger position tracking
+struct ImuDataPacket {
+    int32_t xmg;           // X-axis acceleration in milligravity
+    int32_t ymg;           // Y-axis acceleration in milligravity
+    int32_t zmg;           // Z-axis acceleration in milligravity
+};
+
+// MQTT commands implemented in handler
+// Format: {"cmd":"finger","type":"index|middle|ring|pinky|all"}
+// Format: {"cmd":"control","mode":"emg|remote"}
+void SubscribeHandlerFinger(MessageData *msgData) {
+    uint8_t *payload = msgData->message->payload;
+    payload[msgData->message->payloadlen] = '\0';
+    
+    // Parse JSON command payload...
+    if (strstr((char *)payload, "index")) {
+        isFingerIndexCommandReceived = true;
+        isFingerCommand = true;
+    } 
+    // Handle other command types...
+}
       </pre>
     </div>
 
