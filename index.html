@@ -343,6 +343,73 @@
     .links-preview:hover {
       transform: scale(1.05);
     }
+
+    /* ——— Content Section ——— */
+    .content-section {
+      padding: 2em 0;
+    }
+    .content-section h2 {
+      text-align: center;
+      color: var(--neon);
+      margin: 1.5em auto 1em;
+      position: relative;
+      display: inline-block;
+      padding-bottom: 15px;
+    }
+    .content-section h2::after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 25%;
+      width: 50%;
+      height: 2px;
+      background: var(--neon);
+    }
+    .content-section .container {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+    .content-card {
+      background: var(--card-bg);
+      border-radius: var(--radius);
+      padding: 1.5em;
+      box-shadow: 0 6px 16px var(--shadow);
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(255,255,255,0.7);
+      margin-bottom: 1.5em;
+      transition: transform .3s, box-shadow .3s;
+    }
+    .content-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 10px 20px var(--shadow);
+    }
+    .content-card h3 {
+      color: var(--neon);
+      margin-bottom: 0.5em;
+    }
+    .content-card p {
+      margin-bottom: 1em;
+    }
+    .diagram-gallery {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      gap: 2em;
+      margin-top: 1em;
+    }
+    .diagram-gallery img {
+      max-width: 90%;
+      height: auto;
+      border-radius: var(--radius);
+      box-shadow: 0 4px 12px var(--shadow);
+      transition: transform .3s, box-shadow .3s;
+    }
+    .diagram-gallery img:hover {
+      transform: scale(1.02);
+      box-shadow: 0 8px 16px var(--shadow);
+    }
   </style>
 </head>
 <body>
@@ -428,6 +495,46 @@
             <a href="http://20.42.95.23:1880/#flow/73619fbf95fb2705" class="link-button">Open Dashboard</a>
             <img src="images/NodeRed.jpg" alt="Node-RED Dashboard" class="links-preview">
           </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="content-section">
+      <div class="container">
+        <h2>Device Functionality</h2>
+        <div class="content-card">
+          <p>Our internet-connected hand exoskeleton integrates several components into a cohesive assistive system. At its core, the device uses four positional servo motors to provide controlled assistance to each finger. EMG sensors detect the user's muscle signals, while a Wi-Fi-enabled SAMD21 processes these inputs and connects to our cloud platform. The system includes an emergency stop mechanism for safety and position sensors to accurately track finger movement angles. All components work together to provide responsive, precisely controlled finger assistance that adapts to the user's intentions while enabling remote monitoring and adjustment through our web interface.</p>
+          
+          <h3>System-Level Block Diagram</h3>
+          <div class="diagram-gallery">
+            <img src="images/ESE5160_BlockDiagram.jpg" alt="Overall Block Diagram">
+            <img src="images/Sensor_Diagram.jpg" alt="Sensor Connections Diagram">
+            <img src="images/Actuator_Diagram.jpg" alt="Actuator Connections Diagram">
+          </div>
+        </div>
+        
+        <h2>Challenges</h2>
+        <div class="content-card">
+          <p>Our greatest challenge was calibrating the EMG sensors to reliably detect muscle signals across different users with varying muscle strengths and fatigue levels. We also encountered mechanical difficulties in creating a lightweight yet robust finger attachment system that could transfer force effectively without causing discomfort.</p>
+          <p>These challenges were addressed through iterative testing with multiple users, implementing adaptive thresholding algorithms for the EMG signals, and redesigning the finger attachment points using more flexible materials with improved stress distribution.</p>
+        </div>
+        
+        <h2>Prototype Learnings</h2>
+        <div class="content-card">
+          <h3>What We Learned</h3>
+          <p>We learned that early user testing is critical for assistive technology, as theoretical designs often require significant modifications once actual patients interact with the device. The integration between hardware and software components proved more complex than anticipated, particularly in achieving low-latency response between EMG signal detection and motor activation. Additionally, we discovered the importance of designing for varied hand sizes and considering user fatigue during extended use sessions.</p>
+          
+          <h3>What We'd Do Differently</h3>
+          <p>If given the opportunity to rebuild this device, we would focus on creating a more compact and portable design by miniaturizing the connections and enabling easier mounting mechanisms. We would implement a more rigorous testing schedule beginning earlier in the development process to identify usability issues before finalizing mechanical components. Additionally, we would invest more time in prototyping multiple iterations of the CAD models to optimize the ergonomics and weight distribution across different hand sizes before committing to the final design.</p>
+        </div>
+        
+        <h2>Next Steps & Takeaways</h2>
+        <div class="content-card">
+          <h3>Future Improvements</h3>
+          <p>The most crucial enhancement would be integrating force sensors on each finger to create an adaptive assistance system that responds to the patient's own efforts. This would allow the device to provide precisely the right amount of supplementary force based on real-time measurements of the patient's muscle activation, gradually decreasing assistance as strength improves—creating a truly responsive rehabilitation tool that evolves with the patient's recovery journey. We would also refine the web interface to display this force data alongside movement metrics, giving therapists more comprehensive insights into recovery progress.</p>
+          
+          <h3>Course Learnings</h3>
+          <p>ESE5160 provided invaluable insights into the complete lifecycle of IoT device development, from initial concept to functional prototype integrated with cloud services. The progression of assignments built our technical skills incrementally, particularly in firmware development and cloud connectivity, which proved essential for implementing the remote control features of our exoskeleton. Perhaps most importantly, the course taught us to approach hardware-software integration systematically, considering performance, reliability, and security at every stage of development.</p>
         </div>
       </div>
     </section>
