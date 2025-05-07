@@ -139,6 +139,21 @@
     }
     .video iframe:hover { transform: scale(1.02); }
 
+    /* hero images styling */
+    .hero-images {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 1.5em;
+      margin-bottom: 1em;
+    }
+    .hero-images img {
+      max-width: 120px;
+      height: auto;
+      border-radius: var(--radius);
+      box-shadow: 0 4px 8px var(--shadow);
+    }
+
     /* ——— Footer ——— */
     footer {
       text-align: center;
@@ -161,7 +176,12 @@
 
   <section class="hero">
     <h1>IoT Hand Exoskeleton</h1>
-    <p>Team 20 “The Ohmies” · Megha Mistry &amp; Kevin Wang</p>
+    <div class="hero-images">
+      <img src="logo.png" alt="Logo">
+      <img src="Ohmies.jpg" alt="The Ohmies">
+    </div>
+    <p>Team 20 “The Ohmies”</p>
+    <p>Megha Mistry &amp; Kevin Wang</p>
   </section>
 
   <div class="container">
