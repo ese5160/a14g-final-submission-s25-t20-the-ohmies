@@ -6,29 +6,162 @@
   <meta name="viewport" content="width=device-width,initial-scale=1">
   <title>Hardware Requirements · The Ohmies</title>
   <style>
-    /* same styles as above */
+    /* Updated styles with lilac background */
     :root {
-      --bg:#000;--accent:rgba(255,255,255,0.12);
-      --neon:#d781f8;--text:#e0e0e0;
-      --radius:12px;--shadow:rgba(0,0,0,0.4);
+      --bg:#e6e6fa;
+      --accent:rgba(100, 80, 120, 0.1);
+      --neon:#8a2be2;
+      --text:#2a2a40;
+      --radius:12px;
+      --shadow:rgba(100, 80, 160, 0.2);
     }
     *{box-sizing:border-box;margin:0;padding:0;}
-    body{font-family:'Segoe UI',Arial,sans-serif;color:var(--text);background:var(--bg);display:flex;flex-direction:column;min-height:100vh;}
-    nav{backdrop-filter:blur(10px);background:#fff;display:flex;justify-content:flex-start;align-items:center;padding:1em;position:sticky;top:0;border-bottom:1px solid rgba(255,255,255,0.2);z-index:10;}
-    nav a{margin:0 1em;color:var(--bg);text-decoration:none;font-weight:600;position:relative;transition:color .3s;}
-    nav a:hover{color:var(--neon);} nav a::after{content:'';position:absolute;left:0;bottom:-4px;width:0;height:2px;background:var(--neon);transition:width .3s;}
+    body{
+      font-family:'Segoe UI',Arial,sans-serif;
+      color:var(--text);
+      background:var(--bg);
+      background-image: linear-gradient(to bottom right, #e6e6fa, #d8bfd8);
+      display:flex;
+      flex-direction:column;
+      min-height:100vh;
+    }
+    nav{
+      backdrop-filter:blur(10px);
+      background:rgba(255, 255, 255, 0.8);
+      display:flex;
+      justify-content:flex-start;
+      align-items:center;
+      padding:1em;
+      position:sticky;
+      top:0;
+      border-bottom:1px solid rgba(138, 43, 226, 0.2);
+      box-shadow: 0 2px 8px rgba(100, 80, 160, 0.1);
+      z-index:10;
+    }
+    nav a{
+      margin:0 1em;
+      color:var(--text);
+      text-decoration:none;
+      font-weight:600;
+      position:relative;
+      transition:color .3s, transform .2s;
+    }
+    nav a:hover{
+      color:var(--neon);
+      transform: translateY(-2px);
+    }
+    nav a::after{
+      content:'';
+      position:absolute;
+      left:0;
+      bottom:-4px;
+      width:0;
+      height:2px;
+      background:var(--neon);
+      transition:width .3s;
+    }
     nav a:hover::after{width:100%;}
     .logo{width:150px;height:auto;margin-right:1em;}
-    .hero{text-align:center;padding:2.5em 1em;background:radial-gradient(circle at top,rgba(255,255,255,0.05),transparent);}
-    .hero h1{font-size:2.4em;background:linear-gradient(90deg,#b47cff,var(--neon));-webkit-background-clip:text;-webkit-text-fill-color:transparent;animation:neonGlow 2s ease-in-out infinite both;}
-    .hero p{margin-top:.3em;} @keyframes neonGlow{0%,100%{text-shadow:0 0 4px var(--neon),0 0 10px var(--neon);}50%{text-shadow:0 0 10px var(--neon),0 0 20px var(--neon);}}
+    .hero{
+      text-align:center;
+      padding:2.5em 1em;
+      background:radial-gradient(circle at top,rgba(138, 43, 226, 0.1),transparent);
+    }
+    .hero h1{
+      font-size:2.4em;
+      background:linear-gradient(90deg,#8a2be2,#9370db);
+      background-clip:text;
+      -webkit-text-fill-color:transparent;
+      animation:neonGlow 2s ease-in-out infinite both;
+    }
+    .hero p{
+      margin-top:.3em;
+      color:#483d8b;
+    }
+    @keyframes neonGlow{
+      0%,100%{text-shadow:0 0 4px rgba(138, 43, 226, 0.7), 0 0 10px rgba(138, 43, 226, 0.5);}
+      50%{text-shadow:0 0 10px rgba(138, 43, 226, 0.7), 0 0 20px rgba(138, 43, 226, 0.5);}
+    }
     .container{width:90%;max-width:900px;margin:auto;flex:1;padding-bottom:2em;}
-    .content{background:var(--accent);border-radius:var(--radius);padding:1.5em;margin:1.5em 0;backdrop-filter:blur(10px);border:1px solid rgba(255,255,255,0.2);}
-    .content h2{color:var(--neon);margin-bottom:.5em;}
+    .content{
+      background:rgba(255, 255, 255, 0.7);
+      border-radius:var(--radius);
+      padding:1.5em;
+      margin:1.5em 0;
+      backdrop-filter:blur(10px);
+      border:1px solid rgba(255,255,255,0.7);
+      box-shadow: 0 6px 16px var(--shadow);
+      transition: transform .3s, box-shadow .3s;
+    }
+    .content:hover{
+      transform: translateY(-5px);
+      box-shadow: 0 10px 20px var(--shadow);
+    }
+    .content h2{
+      color:var(--neon);
+      margin-bottom:.5em;
+      position: relative;
+      display: inline-block;
+    }
+    .content h2::after{
+      content: '';
+      position: absolute;
+      bottom: -8px;
+      left: 0;
+      width: 40px;
+      height: 2px;
+      background: var(--neon);
+      transition: width 0.3s;
+    }
+    .content:hover h2::after{
+      width: 100%;
+    }
     .content ul{margin:.5em 0 1em 1.5em;}
-    .content li{margin:.5em 0;}
-    .content img{display:block;margin:1em auto;width:90%;max-width:800px;border-radius:var(--radius);box-shadow:0 4px 8px var(--shadow);}
-    footer{text-align:center;padding:1.5em 0;background:var(--accent);backdrop-filter:blur(10px);border-top:1px solid rgba(255,255,255,0.2);font-size:.9em;}
+    .content li{
+      margin:.5em 0;
+      line-height: 1.5;
+    }
+    .content img{
+      display:block;
+      margin:1em auto;
+      width:90%;
+      max-width:800px;
+      border-radius:var(--radius);
+      box-shadow:0 6px 16px var(--shadow);
+      transition: transform .3s, box-shadow .3s;
+    }
+    .content img:hover{
+      transform: scale(1.02);
+      box-shadow:0 10px 20px var(--shadow);
+    }
+    footer{
+      text-align:center;
+      padding:1.5em 0;
+      background:rgba(255, 255, 255, 0.7);
+      backdrop-filter:blur(10px);
+      border-top:1px solid rgba(138, 43, 226, 0.2);
+      font-size:.9em;
+      color:#483d8b;
+    }
+    .gallery{
+      display:flex;
+      flex-wrap:wrap;
+      gap:8px;
+      justify-content:center;
+      margin-top:1em;
+    }
+    .gallery img{
+      width:140px;
+      border-radius:var(--radius);
+      box-shadow:0 4px 8px var(--shadow);
+      transition:transform .3s, box-shadow .3s;
+      border: 2px solid white;
+    }
+    .gallery img:hover{
+      transform:scale(1.05);
+      box-shadow:0 8px 16px var(--shadow);
+      z-index:1;
+    }
   </style>
 </head>
 <body>
@@ -63,12 +196,12 @@
         <li>0–1.9 L range mapped to 0–100% with 5% resolution.</li>
       </ul>
       <img src="HRS02.jpg" alt="Pressure Mapping">
-      <div style="display:flex;flex-wrap:wrap;gap:5px;justify-content:center;">
-        <img src="HRS020.jpg" alt="Evidence 1" style="width:140px;">
-        <img src="HRS021.jpg" alt="Evidence 2" style="width:140px;">
-        <img src="HRS022.jpg" alt="Evidence 3" style="width:140px;">
-        <img src="HRS023.jpg" alt="Evidence 4" style="width:140px;">
-        <img src="HRS024.jpg" alt="Evidence 5" style="width:140px;">
+      <div class="gallery">
+        <img src="HRS020.jpg" alt="Evidence 1">
+        <img src="HRS021.jpg" alt="Evidence 2">
+        <img src="HRS022.jpg" alt="Evidence 3">
+        <img src="HRS023.jpg" alt="Evidence 4">
+        <img src="HRS024.jpg" alt="Evidence 5">
       </div>
     </div>
 
@@ -96,10 +229,10 @@
       <ul>
         <li>Deviation ≤4 BPM vs. medical oximeter.</li>
       </ul>
-      <div style="display:flex;flex-wrap:wrap;gap:5px;justify-content:center;">
-        <img src="HRS051.jpg" alt="Evidence 1" style="width:140px;">
-        <img src="HRS052.jpg" alt="Evidence 2" style="width:140px;">
-        <img src="HRS053.jpg" alt="Evidence 3" style="width:140px;">
+      <div class="gallery">
+        <img src="HRS051.jpg" alt="Evidence 1">
+        <img src="HRS052.jpg" alt="Evidence 2">
+        <img src="HRS053.jpg" alt="Evidence 3">
       </div>
     </div>
 
@@ -110,9 +243,9 @@
         <li>Tap vs. pure water detection.</li>
       </ul>
       <img src="HRS06.jpg" alt="TDS Screenshot">
-      <div style="display:flex;flex-wrap:wrap;gap:5px;justify-content:center;">
-        <img src="HRS061.jpg" alt="Evidence 1" style="width:140px;">
-        <img src="HRS062.jpg" alt="Evidence 2" style="width:140px;">
+      <div class="gallery">
+        <img src="HRS061.jpg" alt="Evidence 1">
+        <img src="HRS062.jpg" alt="Evidence 2">
       </div>
     </div>
 
@@ -133,7 +266,6 @@
   <footer>
     &copy; 2025 Team 20 "The Ohmies."
   </footer>
-
 
 </body>
 </html>
