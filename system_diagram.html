@@ -22,17 +22,26 @@
       display: flex; flex-direction: column;
       min-height: 100vh;
     }
+    /* ——— Glass Nav ——— */
     nav {
       backdrop-filter: blur(10px);
-      background: var(--accent);
-      display: flex; justify-content: center;
-      padding:1em; position: sticky; top:0; z-index:10;
-      border-bottom:1px solid rgba(255,255,255,0.2);
+      background: #fff;
+      display: flex;
+      justify-content: flex-start;
+      align-items: center;
+      padding: 1em;
+      position: sticky;
+      top: 0;
+      z-index: 10;
+      border-bottom: 1px solid rgba(255,255,255,0.2);
     }
     nav a {
-      margin:0 1em; color:var(--text);
-      text-decoration:none; font-weight:600;
-      position:relative; transition:color .3s;
+      margin: 0 1em;
+      color: var(--bg);
+      text-decoration: none;
+      font-weight: 600;
+      position: relative;
+      transition: color .3s;
     }
     nav a:hover { color: var(--neon); }
     nav a::after {
@@ -41,6 +50,11 @@
       background:var(--neon); transition:width .3s;
     }
     nav a:hover::after { width:100%; }
+    .logo {
+      width: 150px;
+      height: auto;
+      margin-right: 1em;
+    }
     .hero {
       text-align:center;
       padding:2.5em 1em;
@@ -96,6 +110,7 @@
 <body>
 
   <nav>
+    <img src="images/logo.png" alt="Logo" class="logo">
     <a href="index.html">Home</a>
     <a href="system_diagram.html">System Diagram</a>
     <a href="srs.html">SRS</a>
@@ -104,7 +119,7 @@
 
   <section class="hero">
     <h1>System Diagram</h1>
-    <p>Team 20 “The Ohmies”</p>
+    <p>Team 20 "The Ohmies"</p>
   </section>
 
   <div class="container">
@@ -153,7 +168,7 @@
   </div>
 
   <footer>
-    &copy; 2025 Team 20 “The Ohmies.”
+    &copy; 2025 Team 20 "The Ohmies."
   </footer>
 </body>
 </html>

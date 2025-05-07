@@ -14,10 +14,11 @@
     }
     *{box-sizing:border-box;margin:0;padding:0;}
     body{font-family:'Segoe UI',Arial,sans-serif;color:var(--text);background:var(--bg);display:flex;flex-direction:column;min-height:100vh;}
-    nav{backdrop-filter:blur(10px);background:var(--accent);display:flex;justify-content:center;padding:1em;position:sticky;top:0;border-bottom:1px solid rgba(255,255,255,0.2);z-index:10;}
-    nav a{margin:0 1em;color:var(--text);text-decoration:none;font-weight:600;position:relative;transition:color .3s;}
+    nav{backdrop-filter:blur(10px);background:#fff;display:flex;justify-content:flex-start;align-items:center;padding:1em;position:sticky;top:0;border-bottom:1px solid rgba(255,255,255,0.2);z-index:10;}
+    nav a{margin:0 1em;color:var(--bg);text-decoration:none;font-weight:600;position:relative;transition:color .3s;}
     nav a:hover{color:var(--neon);} nav a::after{content:'';position:absolute;left:0;bottom:-4px;width:0;height:2px;background:var(--neon);transition:width .3s;}
     nav a:hover::after{width:100%;}
+    .logo{width:150px;height:auto;margin-right:1em;}
     .hero{text-align:center;padding:2.5em 1em;background:radial-gradient(circle at top,rgba(255,255,255,0.05),transparent);}
     .hero h1{font-size:2.4em;background:linear-gradient(90deg,#b47cff,var(--neon));-webkit-background-clip:text;-webkit-text-fill-color:transparent;animation:neonGlow 2s ease-in-out infinite both;}
     .hero p{margin-top:.3em;} @keyframes neonGlow{0%,100%{text-shadow:0 0 4px var(--neon),0 0 10px var(--neon);}50%{text-shadow:0 0 10px var(--neon),0 0 20px var(--neon);}}
@@ -33,6 +34,7 @@
 <body>
 
   <nav>
+    <img src="images/logo.png" alt="Logo" class="logo">
     <a href="index.html">Home</a>
     <a href="system_diagram.html">System Diagram</a>
     <a href="srs.html">SRS</a>
@@ -132,13 +134,6 @@
     &copy; 2025 Team 20 "The Ohmies."
   </footer>
 
-  <iframe
-    width="800" height="450"
-    src="https://www.youtube-nocookie.com/embed/QpCnf6vj9Dw?rel=0"
-    title="Demo Video"
-    frameborder="0"
-    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-    allowfullscreen>
-  </iframe>
+
 </body>
 </html>
