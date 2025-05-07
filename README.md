@@ -4,10 +4,13 @@
     * Team Number: T20
     * Team Name: The Ohmies
     * Team Members: Kevin Wang, Megha Mistry
-    * Github Repository URL: 
-    * Description of test hardware: (development boards, sensors, actuators, laptop + OS, etc) 
+    * Github Repository URL: https://github.com/ese5160/a14g-final-submission-s25-t20-the-ohmies.git
+    * Description of test hardware: (development boards, sensors, actuators, laptop + OS, etc)  Laptop
 
 ## 1. Video Presentation
+
+    https://youtu.be/26BGSddgL1s
+
 
 ## 2. Project Summary
 
@@ -34,8 +37,13 @@ Our internet-connected hand exoskeleton integrates several components into a coh
 
 #### Include your system-level block diagram here.
 
-### Challenges
+![Block Diagram](images/ESE5160_BlockDiagram.jpg)
 
+![Sensor Connections](images/Sensor_Diagram.jpg)
+
+![Actuator Connections](images/Actuator_Diagram.jpg)
+
+### Challenges
 
 #### Where did you face difficulties? This could be in firmware, hardware, software, integration, etc. How did you overcome these challenges?
 
@@ -68,15 +76,13 @@ ESE5160 provided invaluable insights into the complete lifecycle of IoT device d
 
 ##### Provide a URL to your Node-RED instance for our review (make sure it's running on your Azure instance!)
 
-http://20.42.95.23:1880/#flow/73619fbf95fb2705
+    http://20.42.95.23:1880/#flow/73619fbf95fb2705
 
 #### Provide the share link to your final PCBA on Altium 365.
 
-https://upenn-eselabs.365.altium.com/designs/42FEF60D-4088-4639-AA8F-8E4493D43F92#design
+    https://upenn-eselabs.365.altium.com/designs/42FEF60D-4088-4639-AA8F-8E4493D43F92#design
 
-#### Github Codebase
 
-https://github.com/ese5160/final-project-t20-the-ohmies.git
 
 
 ## 3. Hardware & Software Requirements
@@ -147,9 +153,57 @@ https://github.com/ese5160/final-project-t20-the-ohmies.git
 
 ## 4. Project Photos & Screenshots
 
+Our final project, including any casework or interfacing elements that make up the full project (3D prints, screens, buttons, etc)
+
+![ProjectOverview](images/Setup_Explained.jpg)
+
+
+The standalone PCBA, top
+
+![PcbTop](images/T20A_Board1.jpg)
+
+
+
+The standalone PCBA, bottom
+
+![PcbBottom](images/T20A_Board3.jpg)
+
+Thermal camera images while the board is running under load
+
+![Therm](images/thermal_image.jpg)
+
+
+The Altium Board design in 2D view 
+
+![p2D](images/T20_Altium_PCB2D.jpg)
+
+The Altium Board design in 3D view 
+
+![p3D](images/T20_Altium_PCB3D.jpg)
+
+Node-RED dashboard (screenshot)
+
+![NR](images/NodeRed.jpg)
+
+Node-RED backend (screenshot)
+
+![NR2](images/NodeRed_backend.jpg)
+
+
+Block diagram of your system (You may need to update this to reflect changes throughout the semester.)
+
+![ProjectOverview](images/ESE5160_BlockDiagram.jpg)
+
+
 ## Codebase
 
 - A link to your final embedded C firmware codebases
+
+    https://github.com/ese5160/final-project-t20-the-ohmies.git
+
 - A link to your Node-RED dashboard code
-- Links to any other software required for the functionality of your device
+
+    http://20.42.95.23:1880/#flow/73619fbf95fb2705
+
+
 
