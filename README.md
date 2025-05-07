@@ -7,6 +7,11 @@
     * Github Repository URL: https://github.com/ese5160/a14g-final-submission-s25-t20-the-ohmies.git
     * Description of test hardware: (development boards, sensors, actuators, laptop + OS, etc)  Laptop
 
+## Link to webpage:
+
+    https://ese5160.github.io/a14g-final-submission-s25-t20-the-ohmies/index.html
+    
+
 ## 1. Video Presentation
 
     https://youtu.be/26BGSddgL1s
