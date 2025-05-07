@@ -30,7 +30,7 @@ Second, our cloud-connected dashboard provides comprehensive visualization of re
 
 #### Device Functionality
 
-Our internet-connected hand exoskeleton integrates several components into a cohesive assistive system. At its core, the device uses four positional servo motors to provide controlled assistance to each finger. EMG sensors detect the user's muscle signals, while a Wi-Fi-enabled SAMW 25 processes these inputs and connects to our cloud platform. The system includes a emergency stop mechanism for safety and position sensors to accurately track finger movement angles. All components work together to provide responsive, precisely controlled finger assistance that adapts to the user's intentions while enabling remote monitoring and adjustment through our web interface.
+Our internet-connected hand exoskeleton integrates several components into a cohesive assistive system. At its core, the device uses four positional servo motors to provide controlled assistance to each finger. EMG sensors detect the user's muscle signals, while a Wi-Fi-enabled SAMD21 processes these inputs and connects to our cloud platform. The system includes a emergency stop mechanism for safety and position sensors to accurately track finger movement angles. All components work together to provide responsive, precisely controlled finger assistance that adapts to the user's intentions while enabling remote monitoring and adjustment through our web interface.
 
 #### Include your system-level block diagram here.
 
@@ -83,7 +83,7 @@ https://github.com/ese5160/final-project-t20-the-ohmies.git
 
 ### HRS
 
-    - HRS-01: System shall use SAMW25 as the main microcontroller.
+    - HRS-01: System shall use SAMD21 as the main microcontroller.
     - HRS-02: System shall use MyoWare EMG sensor with analog output.
     - HRS-03: System shall incorporate LSM6DSOX IMU sensors communicating via I2C.
     - HRS-04: System shall use four micro servo motors (MG90S), one on each of the index finger, middle finger, ring finger, and pinky for finger actuation.
@@ -117,7 +117,7 @@ https://github.com/ese5160/final-project-t20-the-ohmies.git
 
 | Requirement ID | Requirement Description | Testing Method | Status |
 |----------------|-------------------------|----------------|--------|
-| HRS-01 | System shall use SAMW25 as the main microcontroller | Verified hardware components in BOM and final assembly | ✅ Pass |
+| HRS-01 | System shall use SAMD21 as the main microcontroller | Verified hardware components in BOM and final assembly | ✅ Pass |
 | HRS-02 | System shall use MyoWare EMG sensor with analog output | Measured analog output signal using oscilloscope to confirm functionality | ❌ Partial (Readings Wildly Inaccurate) |
 | HRS-03 | System shall incorporate LSM6DSOX IMU sensors communicating via I2C | Verified I2C communication using logic analyzer and sensor data reading | ✅ Pass |
 | HRS-04 | System shall use four micro servo motors (MG90S) | Physical inspection and testing of motor response | ✅ Pass |

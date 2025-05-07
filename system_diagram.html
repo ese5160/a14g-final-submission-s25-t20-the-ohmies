@@ -178,7 +178,7 @@
     <div class="content">
       <h2>Motion Control Unit</h2>
       <ul>
-        <li><strong>SAMW25 Microcontroller:</strong> Processes EMG data and controls servo motors.</li>
+        <li><strong>SAMD21 Microcontroller:</strong> Processes EMG data and controls servo motors.</li>
         <li><strong>Servo Motors (MG90S):</strong> Four motors provide controlled finger actuation.</li>
         <li><strong>3.3V Voltage Regulation:</strong> For MCU and sensors.</li>
         <li><strong>5.0V Boost Converter:</strong> Provides power for servo motors.</li>
@@ -201,7 +201,7 @@
     <div class="content">
       <h2>Data Flow</h2>
       <ul>
-        <li><strong>Input:</strong> EMG signals → SAMW25 processing</li>
+        <li><strong>Input:</strong> EMG signals → SAMD21 processing</li>
         <li><strong>Processing:</strong> FreeRTOS tasks (EMG sampling at 1000Hz, IMU data at 100Hz, Motor control at 50Hz)</li>
         <li><strong>Output:</strong> Servo actuation for finger assistance</li>
         <li><strong>Monitoring:</strong> Position data → Wi-Fi → Cloud dashboard</li>
