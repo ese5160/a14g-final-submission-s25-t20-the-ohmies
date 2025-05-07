@@ -1,0 +1,135 @@
+<!-- hrs.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Hardware Requirements · The Ohmies</title>
+  <style>
+    /* same styles as above */
+    :root {
+      --bg:#000;--accent:rgba(255,255,255,0.12);
+      --neon:#d781f8;--text:#e0e0e0;
+      --radius:12px;--shadow:rgba(0,0,0,0.4);
+    }
+    *{box-sizing:border-box;margin:0;padding:0;}
+    body{font-family:'Segoe UI',Arial,sans-serif;color:var(--text);background:var(--bg);display:flex;flex-direction:column;min-height:100vh;}
+    nav{backdrop-filter:blur(10px);background:var(--accent);display:flex;justify-content:center;padding:1em;position:sticky;top:0;border-bottom:1px solid rgba(255,255,255,0.2);z-index:10;}
+    nav a{margin:0 1em;color:var(--text);text-decoration:none;font-weight:600;position:relative;transition:color .3s;}
+    nav a:hover{color:var(--neon);} nav a::after{content:'';position:absolute;left:0;bottom:-4px;width:0;height:2px;background:var(--neon);transition:width .3s;}
+    nav a:hover::after{width:100%;}
+    .hero{text-align:center;padding:2.5em 1em;background:radial-gradient(circle at top,rgba(255,255,255,0.05),transparent);}
+    .hero h1{font-size:2.4em;background:linear-gradient(90deg,#b47cff,var(--neon));-webkit-background-clip:text;-webkit-text-fill-color:transparent;animation:neonGlow 2s ease-in-out infinite both;}
+    .hero p{margin-top:.3em;} @keyframes neonGlow{0%,100%{text-shadow:0 0 4px var(--neon),0 0 10px var(--neon);}50%{text-shadow:0 0 10px var(--neon),0 0 20px var(--neon);}}
+    .container{width:90%;max-width:900px;margin:auto;flex:1;padding-bottom:2em;}
+    .content{background:var(--accent);border-radius:var(--radius);padding:1.5em;margin:1.5em 0;backdrop-filter:blur(10px);border:1px solid rgba(255,255,255,0.2);}
+    .content h2{color:var(--neon);margin-bottom:.5em;}
+    .content ul{margin:.5em 0 1em 1.5em;}
+    .content li{margin:.5em 0;}
+    .content img{display:block;margin:1em auto;width:90%;max-width:800px;border-radius:var(--radius);box-shadow:0 4px 8px var(--shadow);}
+    footer{text-align:center;padding:1.5em 0;background:var(--accent);backdrop-filter:blur(10px);border-top:1px solid rgba(255,255,255,0.2);font-size:.9em;}
+  </style>
+</head>
+<body>
+
+  <nav>
+    <a href="index.html">Home</a>
+    <a href="system_diagram.html">System Diagram</a>
+    <a href="software_requirements.html">SRS</a>
+    <a href="hardware_requirements.html">HRS</a>
+  </nav>
+
+  <section class="hero">
+    <h1>Hardware Requirements</h1>
+    <p>Team 20 “The Ohmies”</p>
+  </section>
+
+  <div class="container">
+
+    <div class="content">
+      <h2>HRS 01 – ATmega328PB @16 MHz</h2>
+      <p><strong>Status:</strong> Achieved</p>
+      <ul>
+        <li>Verified SPI/UART at 16 MHz clock.</li>
+      </ul>
+    </div>
+
+    <div class="content">
+      <h2>HRS 02 – FSR406 Pressure → Level</h2>
+      <p><strong>Status:</strong> Achieved</p>
+      <ul>
+        <li>0–1.9 L range mapped to 0–100% with 5% resolution.</li>
+      </ul>
+      <img src="HRS02.jpg" alt="Pressure Mapping">
+      <div style="display:flex;flex-wrap:wrap;gap:5px;justify-content:center;">
+        <img src="HRS020.jpg" alt="Evidence 1" style="width:140px;">
+        <img src="HRS021.jpg" alt="Evidence 2" style="width:140px;">
+        <img src="HRS022.jpg" alt="Evidence 3" style="width:140px;">
+        <img src="HRS023.jpg" alt="Evidence 4" style="width:140px;">
+        <img src="HRS024.jpg" alt="Evidence 5" style="width:140px;">
+      </div>
+    </div>
+
+    <div class="content">
+      <h2>HRS 03 – LCD Display</h2>
+      <p><strong>Status:</strong> Achieved</p>
+      <ul>
+        <li>Real-time BPM, %, PPM &amp; reminders.</li>
+      </ul>
+      <img src="HRS03.jpg" alt="LCD Screenshot">
+    </div>
+
+    <div class="content">
+      <h2>HRS 04 – ESP32 → Blynk</h2>
+      <p><strong>Status:</strong> Achieved</p>
+      <ul>
+        <li>Level-shifter → ESP32 uploads to Blynk via Wi-Fi.</li>
+      </ul>
+      <img src="HRS04.jpg" alt="Blynk Screenshot">
+    </div>
+
+    <div class="content">
+      <h2>HRS 05 – MAX30102 Accuracy ±3 BPM</h2>
+      <p><strong>Status:</strong> Achieved</p>
+      <ul>
+        <li>Deviation ≤4 BPM vs. medical oximeter.</li>
+      </ul>
+      <div style="display:flex;flex-wrap:wrap;gap:5px;justify-content:center;">
+        <img src="HRS051.jpg" alt="Evidence 1" style="width:140px;">
+        <img src="HRS052.jpg" alt="Evidence 2" style="width:140px;">
+        <img src="HRS053.jpg" alt="Evidence 3" style="width:140px;">
+      </div>
+    </div>
+
+    <div class="content">
+      <h2>HRS 06 – TDS 0–1000 ppm</h2>
+      <p><strong>Status:</strong> Achieved</p>
+      <ul>
+        <li>Tap vs. pure water detection.</li>
+      </ul>
+      <img src="HRS06.jpg" alt="TDS Screenshot">
+      <div style="display:flex;flex-wrap:wrap;gap:5px;justify-content:center;">
+        <img src="HRS061.jpg" alt="Evidence 1" style="width:140px;">
+        <img src="HRS062.jpg" alt="Evidence 2" style="width:140px;">
+      </div>
+    </div>
+
+    <div class="content">
+      <h2>HRS 07 – Powered by 9 V Battery</h2>
+      <p><strong>Status:</strong> Achieved</p>
+      <img src="HRS07.jpg" alt="Battery Screenshot">
+    </div>
+
+    <div class="content">
+      <h2>HRS 08 – 5 V Regulator (LM7805)</h2>
+      <p><strong>Status:</strong> Achieved</p>
+      <img src="HRS08.jpg" alt="Regulator Screenshot">
+    </div>
+
+  </div>
+
+  <footer>
+    &copy; 2025 Team 20 “The Ohmies.”
+  </footer>
+</body>
+</html>

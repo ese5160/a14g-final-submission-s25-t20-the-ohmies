@@ -1,0 +1,136 @@
+<!-- srs.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Software Requirements · The Ohmies</title>
+  <style>
+    /* same styles as system_diagram.html */
+    :root {
+      --bg: #000; --accent: rgba(255,255,255,0.12);
+      --neon: #d781f8; --text: #e0e0e0;
+      --radius:12px; --shadow:rgba(0,0,0,0.4);
+    }
+    *{box-sizing:border-box;margin:0;padding:0;}
+    body{font-family:'Segoe UI',Arial,sans-serif;color:var(--text);background:var(--bg);display:flex;flex-direction:column;min-height:100vh;}
+    nav{backdrop-filter:blur(10px);background:var(--accent);display:flex;justify-content:center;padding:1em;position:sticky;top:0;border-bottom:1px solid rgba(255,255,255,0.2);z-index:10;}
+    nav a{margin:0 1em;color:var(--text);text-decoration:none;font-weight:600;position:relative;transition:color .3s;}
+    nav a:hover{color:var(--neon);} nav a::after{content:'';position:absolute;left:0;bottom:-4px;width:0;height:2px;background:var(--neon);transition:width .3s;}
+    nav a:hover::after{width:100%;}
+    .hero{text-align:center;padding:2.5em 1em;background:radial-gradient(circle at top, rgba(255,255,255,0.05),transparent);}
+    .hero h1{font-size:2.4em;background:linear-gradient(90deg,#b47cff,var(--neon));-webkit-background-clip:text;-webkit-text-fill-color:transparent;animation:neonGlow 2s ease-in-out infinite both;}
+    .hero p{margin-top:.3em;} @keyframes neonGlow{0%,100%{text-shadow:0 0 4px var(--neon),0 0 10px var(--neon);}50%{text-shadow:0 0 10px var(--neon),0 0 20px var(--neon);}}
+    .container{width:90%;max-width:900px;margin:auto;flex:1;padding-bottom:2em;}
+    .content{background:var(--accent);border-radius:var(--radius);padding:1.5em;margin:1.5em 0;backdrop-filter:blur(10px);border:1px solid rgba(255,255,255,0.2);}
+    .content h2{color:var(--neon);margin-bottom:.5em;}
+    .content ul{margin:.5em 0 1em 1.5em;}
+    .content li{margin:.5em 0;}
+    .content pre{background:rgba(255,255,255,0.05);padding:1em;border-radius:6px;overflow-x:auto;}
+    .content img{display:block;margin:1em auto;width:90%;max-width:800px;border-radius:var(--radius);box-shadow:0 4px 8px var(--shadow);}
+    footer{text-align:center;padding:1.5em 0;background:var(--accent);backdrop-filter:blur(10px);border-top:1px solid rgba(255,255,255,0.2);font-size:.9em;}
+  </style>
+</head>
+<body>
+
+  <nav>
+    <a href="index.html">Home</a>
+    <a href="system_diagram.html">System Diagram</a>
+    <a href="software_requirements.html">SRS</a>
+    <a href="hardware_requirements.html">HRS</a>
+  </nav>
+
+  <section class="hero">
+    <h1>Software Requirements</h1>
+    <p>Team 20 “The Ohmies”</p>
+  </section>
+
+  <div class="container">
+
+    <div class="content">
+      <h2>SRS 01 – Water Level (FSR406)</h2>
+      <p><strong>Status:</strong> Achieved</p>
+      <ul>
+        <li>ADC → pressureReading → volume via interpolation.</li>
+        <li>Sample every 5 s, accumulate intake.</li>
+      </ul>
+      <pre>
+uint16_t pressureReading = ADC_Read(Pressure_PIN);
+float currentVolume = getVolumeFromAdc(pressureReading);
+waterIntakeTotal += lastVolume - currentVolume;
+      </pre>
+    </div>
+
+    <div class="content">
+      <h2>SRS 02 – TDS on-demand ≤5 s</h2>
+      <p><strong>Status:</strong> Achieved</p>
+      <ul>
+        <li>SEN0244 sensor, temp-compensation formula.</li>
+        <li>Measurement completes within 5 s.</li>
+      </ul>
+      <pre>
+float tdsValue = getTDS(temperature);
+lcd_display("TDS Value", tdsValue);
+      </pre>
+    </div>
+
+    <div class="content">
+      <h2>SRS 03 – Heart Rate on-demand ≤10 s</h2>
+      <p><strong>Status:</strong> Achieved</p>
+      <ul>
+        <li>MAX30102 PPG → BPM in ~12 s (<15 s req).</li>
+      </ul>
+      <pre>
+uint16_t pulseReading = ADC_Read(PULSE_PIN);
+process_pulse(pulseReading);
+      </pre>
+    </div>
+
+    <div class="content">
+      <h2>SRS 04 – ESP32 → Blynk Platform</h2>
+      <p><strong>Status:</strong> Achieved</p>
+      <ul>
+        <li>Wi-Fi streams BPM, intake, TDS to Blynk.</li>
+      </ul>
+      <pre>
+Blynk.virtualWrite(V0_BPM, bpm);
+Blynk.virtualWrite(V1_WATER_INTAKE, waterintake);
+Blynk.virtualWrite(V3_TDS, tdsValue);
+      </pre>
+      <img src="SRS04.png" alt="Blynk Screenshot">
+    </div>
+
+    <div class="content">
+      <h2>SRS 05 – Hydration Reminders</h2>
+      <p><strong>Status:</strong> Achieved</p>
+      <ul>
+        <li>LCD + Blynk reminder after simulated 25 s inactivity.</li>
+      </ul>
+      <pre>
+if (current_time - last_change_time >= 25000) {
+  LCD_drawString(...);
+  Blynk.virtualWrite(V2_DRINK, "Reminder: Drink Water");
+}
+      </pre>
+    </div>
+
+    <div class="content">
+      <h2>SRS 06 – 1 s LCD Updates</h2>
+      <p><strong>Status:</strong> Achieved</p>
+      <ul>
+        <li>Every second refresh of BPM, level, TDS on LCD.</li>
+      </ul>
+      <pre>
+LCD_drawString(...);  // heart rate
+LCD_drawString(...);  // water level
+LCD_drawString(...);  // TDS
+      </pre>
+    </div>
+
+  </div>
+
+  <footer>
+    &copy; 2025 Team 20 “The Ohmies.”
+  </footer>
+</body>
+</html>
