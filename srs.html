@@ -172,82 +172,235 @@
   <div class="container">
 
     <div class="content">
-      <h2>SRS 01 – Water Level (FSR406)</h2>
+      <h2>SRS 01 – FreeRTOS Task Scheduling</h2>
       <p><strong>Status:</strong> Achieved</p>
       <ul>
-        <li>ADC → pressureReading → volume via interpolation.</li>
-        <li>Sample every 5 s, accumulate intake.</li>
+        <li>Code review and task execution verification confirm proper implementation.</li>
+        <li>System uses FreeRTOS for effective task management.</li>
       </ul>
       <pre>
-uint16_t pressureReading = ADC_Read(Pressure_PIN);
-float currentVolume = getVolumeFromAdc(pressureReading);
-waterIntakeTotal += lastVolume - currentVolume;
+// FreeRTOS task creation example
+xTaskCreate(
+    vEMGSamplingTask, 
+    "EMG_Sampling",
+    configMINIMAL_STACK_SIZE, 
+    NULL, 
+    tskIDLE_PRIORITY + 3, 
+    NULL);
       </pre>
     </div>
 
     <div class="content">
-      <h2>SRS 02 – TDS on-demand ≤5 s</h2>
+      <h2>SRS 02 – EMG Sampling (1000Hz)</h2>
       <p><strong>Status:</strong> Achieved</p>
       <ul>
-        <li>SEN0244 sensor, temp-compensation formula.</li>
-        <li>Measurement completes within 5 s.</li>
+        <li>EMG sampling task runs at highest priority with 1000Hz sampling rate.</li>
+        <li>Verified using timing pins and oscilloscope measurements.</li>
       </ul>
       <pre>
-float tdsValue = getTDS(temperature);
-lcd_display("TDS Value", tdsValue);
-      </pre>
-    </div>
-
-    <div class="content">
-      <h2>SRS 03 – Heart Rate on-demand ≤10 s</h2>
-      <p><strong>Status:</strong> Achieved</p>
-      <ul>
-        <li>MAX30102 PPG → BPM in ~12 s (<15 s req).</li>
-      </ul>
-      <pre>
-uint16_t pulseReading = ADC_Read(PULSE_PIN);
-process_pulse(pulseReading);
-      </pre>
-    </div>
-
-    <div class="content">
-      <h2>SRS 04 – ESP32 → Blynk Platform</h2>
-      <p><strong>Status:</strong> Achieved</p>
-      <ul>
-        <li>Wi-Fi streams BPM, intake, TDS to Blynk.</li>
-      </ul>
-      <pre>
-Blynk.virtualWrite(V0_BPM, bpm);
-Blynk.virtualWrite(V1_WATER_INTAKE, waterintake);
-Blynk.virtualWrite(V3_TDS, tdsValue);
-      </pre>
-      <img src="SRS04.png" alt="Blynk Screenshot">
-    </div>
-
-    <div class="content">
-      <h2>SRS 05 – Hydration Reminders</h2>
-      <p><strong>Status:</strong> Achieved</p>
-      <ul>
-        <li>LCD + Blynk reminder after simulated 25 s inactivity.</li>
-      </ul>
-      <pre>
-if (current_time - last_change_time >= 25000) {
-  LCD_drawString(...);
-  Blynk.virtualWrite(V2_DRINK, "Reminder: Drink Water");
+// EMG sampling at 1000Hz
+void vEMGSamplingTask(void *pvParameters) {
+    const TickType_t xFrequency = 1; // 1ms = 1000Hz
+    for(;;) {
+        emg_value = read_emg_sensor();
+        process_emg_data(emg_value);
+        vTaskDelay(xFrequency);
+    }
 }
       </pre>
     </div>
 
     <div class="content">
-      <h2>SRS 06 – 1 s LCD Updates</h2>
+      <h2>SRS 03 – IMU Data Collection (100Hz)</h2>
       <p><strong>Status:</strong> Achieved</p>
       <ul>
-        <li>Every second refresh of BPM, level, TDS on LCD.</li>
+        <li>IMU data collection runs at 100Hz with medium priority.</li>
+        <li>Verified data collection rate through timing analysis.</li>
       </ul>
       <pre>
-LCD_drawString(...);  // heart rate
-LCD_drawString(...);  // water level
-LCD_drawString(...);  // TDS
+// IMU data collection at 100Hz
+void vIMUDataCollectionTask(void *pvParameters) {
+    const TickType_t xFrequency = 10; // 10ms = 100Hz
+    for(;;) {
+        read_imu_data(&imu_data);
+        process_motion_data(&imu_data);
+        vTaskDelay(xFrequency);
+    }
+}
+      </pre>
+    </div>
+
+    <div class="content">
+      <h2>SRS 04 – Motor Control Task (50Hz)</h2>
+      <p><strong>Status:</strong> Achieved</p>
+      <ul>
+        <li>Motor control task processes EMG data and updates servo positions at 50Hz.</li>
+        <li>Measured motor update frequency with timing analysis.</li>
+      </ul>
+      <pre>
+// Motor control at 50Hz
+void vMotorControlTask(void *pvParameters) {
+    const TickType_t xFrequency = 20; // 20ms = 50Hz
+    for(;;) {
+        update_motor_positions(processed_emg_data);
+        vTaskDelay(xFrequency);
+    }
+}
+      </pre>
+    </div>
+
+    <div class="content">
+      <h2>SRS 05 – Wi-Fi Communication</h2>
+      <p><strong>Status:</strong> Achieved</p>
+      <ul>
+        <li>Wi-Fi communication task transmits sensor data at least every 1 second.</li>
+        <li>Monitored data transmission using timer on phone.</li>
+      </ul>
+      <pre>
+// Wi-Fi communication task
+void vWiFiCommunicationTask(void *pvParameters) {
+    const TickType_t xFrequency = 1000; // 1000ms = 1Hz
+    for(;;) {
+        send_data_to_cloud(sensor_data);
+        vTaskDelay(xFrequency);
+    }
+}
+      </pre>
+    </div>
+
+    <div class="content">
+      <h2>SRS 06 – Safety Monitoring</h2>
+      <p><strong>Status:</strong> Achieved</p>
+      <ul>
+        <li>Interrupt-driven safety monitoring for motor control implemented.</li>
+        <li>Tested system response to various fault conditions.</li>
+      </ul>
+      <pre>
+// Interrupt handler for emergency stop
+void emergency_stop_handler(void) {
+    stop_all_motors();
+    set_system_state(EMERGENCY_STOP);
+    notify_user("EMERGENCY STOP ACTIVATED");
+}
+      </pre>
+    </div>
+
+    <div class="content">
+      <h2>SRS 07 – Task Synchronization</h2>
+      <p><strong>Status:</strong> Achieved</p>
+      <ul>
+        <li>Implemented FreeRTOS semaphores and mutexes to prevent data corruption.</li>
+        <li>Verified through concurrent access testing and logging.</li>
+      </ul>
+      <pre>
+// Data protection with mutex
+if (xSemaphoreTake(xDataMutex, portMAX_DELAY) == pdTRUE) {
+    // Access protected data
+    update_shared_data(new_data);
+    xSemaphoreGive(xDataMutex);
+}
+      </pre>
+    </div>
+
+    <div class="content">
+      <h2>SRS 08 – Wi-Fi Motor Parameter Control</h2>
+      <p><strong>Status:</strong> Achieved</p>
+      <ul>
+        <li>Users can modify motor parameters through Wi-Fi commands.</li>
+        <li>Tested per-finger control commands on the web interface.</li>
+      </ul>
+      <pre>
+// Process command from web interface
+void process_web_command(WebCommand_t* cmd) {
+    switch(cmd->type) {
+        case FINGER_POSITION:
+            set_finger_position(cmd->finger_id, cmd->position);
+            break;
+        case TORQUE_LIMIT:
+            set_torque_limit(cmd->finger_id, cmd->torque);
+            break;
+    }
+}
+      </pre>
+    </div>
+
+    <div class="content">
+      <h2>SRS 09 – Emergency Stop Function</h2>
+      <p><strong>Status:</strong> Achieved</p>
+      <ul>
+        <li>Emergency stop function disables all motor operations when activated.</li>
+        <li>Verified motor disabling in various operational states.</li>
+      </ul>
+      <pre>
+// Emergency stop implementation
+void disable_all_motors(void) {
+    for (int i = 0; i < NUM_MOTORS; i++) {
+        motors[i].enabled = false;
+        set_motor_pwm(i, 0);
+    }
+    emergency_state = true;
+}
+      </pre>
+    </div>
+
+    <div class="content">
+      <h2>SRS 10 – Command Response Time</h2>
+      <p><strong>Status:</strong> Achieved</p>
+      <ul>
+        <li>System processes Wi-Fi commands within 100ms of receipt.</li>
+        <li>Measured command response time on phone timer.</li>
+      </ul>
+      <pre>
+// Command processing task
+void vCommandProcessingTask(void *pvParameters) {
+    for(;;) {
+        if (xQueueReceive(xCommandQueue, &receivedCommand, portMAX_DELAY) == pdPASS) {
+            // Process command immediately
+            process_command(&receivedCommand);
+            // Send acknowledgment
+            send_ack(receivedCommand.id);
+        }
+    }
+}
+      </pre>
+    </div>
+
+    <div class="content">
+      <h2>SRS 11 – Finger Angle Control</h2>
+      <p><strong>Status:</strong> Achieved</p>
+      <ul>
+        <li>System supports individual finger angle control from 0° to 90° with 1° resolution.</li>
+        <li>Tested angle precision using protractor.</li>
+      </ul>
+      <pre>
+// Set finger position with 1-degree resolution
+void set_finger_position(uint8_t finger_id, uint8_t angle) {
+    // Constrain angle between 0-90 degrees
+    if (angle > 90) angle = 90;
+    
+    // Convert angle to servo position
+    uint16_t servo_pos = map(angle, 0, 90, SERVO_MIN, SERVO_MAX);
+    servo_set_position(finger_id, servo_pos);
+}
+      </pre>
+    </div>
+
+    <div class="content">
+      <h2>SRS 12 – Command Protocol</h2>
+      <p><strong>Status:</strong> Achieved</p>
+      <ul>
+        <li>Implemented command protocol for emergency stop activation and parameter adjustments.</li>
+        <li>Verified protocol functionality through test commands.</li>
+      </ul>
+      <pre>
+// Command protocol structure
+typedef struct {
+    uint8_t cmd_type;    // Command type (ESTOP, FINGER_CTRL, etc.)
+    uint8_t finger_id;   // 0-3 for specific finger, 255 for all
+    uint8_t parameter;   // Position, torque, etc.
+    uint8_t value;       // Parameter value
+    uint16_t checksum;   // Validation checksum
+} Command_t;
       </pre>
     </div>
 

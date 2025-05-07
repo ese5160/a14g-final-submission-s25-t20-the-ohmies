@@ -182,83 +182,87 @@
   <div class="container">
 
     <div class="content">
-      <h2>HRS 01 – ATmega328PB @16 MHz</h2>
+      <h2>HRS 01 – SAMW25 Microcontroller</h2>
       <p><strong>Status:</strong> Achieved</p>
       <ul>
-        <li>Verified SPI/UART at 16 MHz clock.</li>
+        <li>Verified hardware components in BOM and final assembly.</li>
       </ul>
     </div>
 
     <div class="content">
-      <h2>HRS 02 – FSR406 Pressure → Level</h2>
+      <h2>HRS 02 – MyoWare EMG Sensor</h2>
+      <p><strong>Status:</strong> Partial</p>
+      <ul>
+        <li>Measured analog output signal using oscilloscope to confirm functionality.</li>
+        <li>Readings were wildly inaccurate, requiring software compensation.</li>
+      </ul>
+    </div>
+
+    <div class="content">
+      <h2>HRS 03 – LSM6DSOX IMU Sensors</h2>
       <p><strong>Status:</strong> Achieved</p>
       <ul>
-        <li>0–1.9 L range mapped to 0–100% with 5% resolution.</li>
+        <li>Verified I2C communication using logic analyzer and sensor data reading.</li>
       </ul>
-      <img src="HRS02.jpg" alt="Pressure Mapping">
-      <div class="gallery">
-        <img src="HRS020.jpg" alt="Evidence 1">
-        <img src="HRS021.jpg" alt="Evidence 2">
-        <img src="HRS022.jpg" alt="Evidence 3">
-        <img src="HRS023.jpg" alt="Evidence 4">
-        <img src="HRS024.jpg" alt="Evidence 5">
-      </div>
     </div>
 
     <div class="content">
-      <h2>HRS 03 – LCD Display</h2>
+      <h2>HRS 04 – MG90S Servo Motors</h2>
       <p><strong>Status:</strong> Achieved</p>
       <ul>
-        <li>Real-time BPM, %, PPM &amp; reminders.</li>
+        <li>Physical inspection and testing of motor response for all four fingers.</li>
       </ul>
-      <img src="HRS03.jpg" alt="LCD Screenshot">
     </div>
 
     <div class="content">
-      <h2>HRS 04 – ESP32 → Blynk</h2>
+      <h2>HRS 05 – 3.7V Li-ion Battery</h2>
       <p><strong>Status:</strong> Achieved</p>
       <ul>
-        <li>Level-shifter → ESP32 uploads to Blynk via Wi-Fi.</li>
+        <li>Load-testing and measured input/output voltages on test points.</li>
       </ul>
-      <img src="HRS04.jpg" alt="Blynk Screenshot">
     </div>
 
     <div class="content">
-      <h2>HRS 05 – MAX30102 Accuracy ±3 BPM</h2>
+      <h2>HRS 06 – 3.3V Voltage Regulation</h2>
       <p><strong>Status:</strong> Achieved</p>
       <ul>
-        <li>Deviation ≤4 BPM vs. medical oximeter.</li>
+        <li>Measured voltage output from regulator circuit for MCU and sensors.</li>
       </ul>
-      <div class="gallery">
-        <img src="HRS051.jpg" alt="Evidence 1">
-        <img src="HRS052.jpg" alt="Evidence 2">
-        <img src="HRS053.jpg" alt="Evidence 3">
-      </div>
     </div>
 
     <div class="content">
-      <h2>HRS 06 – TDS 0–1000 ppm</h2>
+      <h2>HRS 07 – 5.0V Boost Converter</h2>
+      <p><strong>Status:</strong> Partial</p>
+      <ul>
+        <li>Measured voltage output at servo power pins.</li>
+        <li>On-board boost converter failed, requiring external power solution.</li>
+      </ul>
+    </div>
+
+    <div class="content">
+      <h2>HRS 08 – Minimum Grip Strength (20 lbs)</h2>
+      <p><strong>Status:</strong> Partial</p>
+      <ul>
+        <li>Measured grip force using force gauge.</li>
+        <li>Achieved 16 lbs of force, below target specification.</li>
+      </ul>
+    </div>
+
+    <div class="content">
+      <h2>HRS 09 – Individual Servo Control</h2>
       <p><strong>Status:</strong> Achieved</p>
       <ul>
-        <li>Tap vs. pure water detection.</li>
+        <li>Verified independent actuation of each finger through testing.</li>
       </ul>
-      <img src="HRS06.jpg" alt="TDS Screenshot">
-      <div class="gallery">
-        <img src="HRS061.jpg" alt="Evidence 1">
-        <img src="HRS062.jpg" alt="Evidence 2">
-      </div>
     </div>
 
     <div class="content">
-      <h2>HRS 07 – Powered by 9 V Battery</h2>
+      <h2>HRS 10 – Emergency Stop Button</h2>
       <p><strong>Status:</strong> Achieved</p>
-      <img src="HRS07.jpg" alt="Battery Screenshot">
-    </div>
-
-    <div class="content">
-      <h2>HRS 08 – 5 V Regulator (LM7805)</h2>
-      <p><strong>Status:</strong> Achieved</p>
-      <img src="HRS08.jpg" alt="Regulator Screenshot">
+      <ul>
+        <li>Functionality verified through repeated emergency stop tests.</li>
+        <li>All motor operations disabled immediately upon activation.</li>
+      </ul>
     </div>
 
   </div>

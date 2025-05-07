@@ -163,34 +163,36 @@
   <div class="container">
 
     <div class="content">
-      <img src="MVP-1.png" alt="System Diagram">
+      <img src="exoskeleton_system_diagram.png" alt="Hand Exoskeleton System Diagram">
     </div>
 
     <div class="content">
       <h2>Signal Acquisition Unit</h2>
       <ul>
-        <li><strong>Water Intake Monitoring (FSR406):</strong> pressure readings → water volume.</li>
-        <li><strong>Water Quality Testing (SEN0244):</strong> conductivity → TDS.</li>
-        <li><strong>Pulse Acquisition (MAX30102):</strong> PPG → heart rate.</li>
+        <li><strong>EMG Sensor (MyoWare):</strong> Detects muscle signals from the user to trigger finger movements.</li>
+        <li><strong>Position Sensors (LSM6DSOX IMU):</strong> Track finger movement angles for precise control and feedback.</li>
+        <li><strong>Emergency Stop Button:</strong> Immediately halts all motor operations for safety.</li>
       </ul>
     </div>
 
     <div class="content">
-      <h2>Local Monitoring Unit</h2>
+      <h2>Motion Control Unit</h2>
       <ul>
-        <li><strong>ATmega328PB:</strong> processes intake, quality, &amp; BPM.</li>
-        <li><strong>LCD:</strong> real-time display.</li>
-        <li><strong>Buzzer:</strong> alerts.</li>
-        <li><strong>ESP32:</strong> Wi-Fi → cloud.</li>
+        <li><strong>SAMW25 Microcontroller:</strong> Processes EMG data and controls servo motors.</li>
+        <li><strong>Servo Motors (MG90S):</strong> Four motors provide controlled finger actuation.</li>
+        <li><strong>3.3V Voltage Regulation:</strong> For MCU and sensors.</li>
+        <li><strong>5.0V Boost Converter:</strong> Provides power for servo motors.</li>
       </ul>
     </div>
 
     <div class="content">
-      <h2>Remote Monitoring Unit</h2>
+      <h2>Remote Monitoring & Control Unit</h2>
       <ul>
         <li><strong>Cloud Platform:</strong>
           <ul>
-            <li>Data Storage &amp; Real-time Monitoring (Blynk).</li>
+            <li>Real-time finger position visualization</li>
+            <li>Per-finger precision control interface</li>
+            <li>Recovery progress tracking over time</li>
           </ul>
         </li>
       </ul>
@@ -199,7 +201,11 @@
     <div class="content">
       <h2>Data Flow</h2>
       <ul>
-        <li>Acquisition → Local processing &amp; display → ESP32 → Cloud.</li>
+        <li><strong>Input:</strong> EMG signals → SAMW25 processing</li>
+        <li><strong>Processing:</strong> FreeRTOS tasks (EMG sampling at 1000Hz, IMU data at 100Hz, Motor control at 50Hz)</li>
+        <li><strong>Output:</strong> Servo actuation for finger assistance</li>
+        <li><strong>Monitoring:</strong> Position data → Wi-Fi → Cloud dashboard</li>
+        <li><strong>Control:</strong> Web interface → Wi-Fi → Motor parameter adjustments</li>
       </ul>
     </div>
 

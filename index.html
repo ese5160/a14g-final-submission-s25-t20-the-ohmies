@@ -242,6 +242,79 @@
       0% { opacity: 0; transform: translateY(20px); }
       100% { opacity: 1; transform: translateY(0); }
     }
+
+    /* ——— Links Section ——— */
+    .links-section {
+      text-align: center;
+      margin-bottom: 3em;
+      animation: fadeInUp 0.8s ease-out both 0.4s;
+    }
+    .links-section h2 {
+      color: var(--neon);
+      margin-bottom: 1.5em;
+      position: relative;
+      display: inline-block;
+      padding-bottom: 15px;
+    }
+    .links-section h2::after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 25%;
+      width: 50%;
+      height: 2px;
+      background: var(--neon);
+    }
+    .links-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 1.5em;
+      max-width: 900px;
+      margin: 0 auto;
+    }
+    .link-card {
+      display: flex;
+      align-items: center;
+      background: var(--card-bg);
+      padding: 1.2em;
+      border-radius: var(--radius);
+      text-decoration: none;
+      color: var(--text);
+      box-shadow: 0 6px 16px var(--shadow);
+      transition: transform .3s, box-shadow .3s;
+      border: 1px solid rgba(255,255,255,0.7);
+    }
+    .link-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 12px 24px var(--shadow);
+      color: var(--neon);
+    }
+    .link-icon {
+      width: 48px;
+      height: 48px;
+      margin-right: 1em;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: rgba(138, 43, 226, 0.1);
+      border-radius: 50%;
+      transition: background .3s;
+    }
+    .link-card:hover .link-icon {
+      background: rgba(138, 43, 226, 0.2);
+    }
+    .link-icon svg {
+      stroke: var(--neon);
+    }
+    .link-content h3 {
+      margin-bottom: 0.3em;
+      font-size: 1.1em;
+      transition: color .3s;
+    }
+    .link-content p {
+      font-size: 0.85em;
+      opacity: 0.9;
+    }
   </style>
 </head>
 <body>
@@ -269,35 +342,69 @@
       <div class="card">
         <img src="exoskeleton_front.jpg" alt="Hand Exoskeleton Front">
         <div class="card-content">
-          <h3>Precision Motion</h3>
-          <p>Four MG90S servos deliver 0–90° finger motion with 1° resolution and ≥20 lb grip.</p>
+          <h3>Assistive Motion</h3>
+          <p>Four precision servo motors provide controlled assistance to help patients bend their fingers, improving grip strength and dexterity for daily tasks.</p>
         </div>
       </div>
       <div class="card">
         <img src="emg_sensor_closeup.jpg" alt="EMG Sensor">
         <div class="card-content">
-          <h3>Muscle Control</h3>
-          <p>MyoWare EMG sensors detect your intent and drive real-time assistance.</p>
+          <h3>EMG Control</h3>
+          <p>MyoWare EMG sensors detect the user's muscle signals, allowing the device to respond to natural movement intentions and assist accordingly.</p>
         </div>
       </div>
       <div class="card">
         <img src="imu_board.jpg" alt="IMU Board">
         <div class="card-content">
-          <h3>Position Feedback</h3>
-          <p>LSM6DSOX IMUs track each finger via I²C for closed-loop accuracy.</p>
+          <h3>Precise Tracking</h3>
+          <p>LSM6DSOX IMU sensors track finger movement angles with high precision, enabling accurate position feedback and recovery progress monitoring.</p>
         </div>
       </div>
       <div class="card">
         <img src="wifi_module.jpg" alt="Wi-Fi Module">
         <div class="card-content">
-          <h3>Cloud Sync</h3>
-          <p>SAM W25 streams sensor data every second to a Node-RED dashboard over Wi-Fi.</p>
+          <h3>Remote Control</h3>
+          <p>Wi-Fi connectivity through SAMW25 enables remote finger-by-finger precision control and real-time monitoring through a custom web interface.</p>
         </div>
       </div>
     </div>
 
+    <div class="links-section">
+      <h2>Project Resources</h2>
+      <div class="links-grid">
+        <a href="https://github.com/ese5160/final-project-t20-the-ohmies.git" class="link-card" target="_blank">
+          <div class="link-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"></path></svg>
+          </div>
+          <div class="link-content">
+            <h3>GitHub Repository</h3>
+            <p>Access our embedded firmware codebase</p>
+          </div>
+        </a>
+        <a href="https://upenn-eselabs.365.altium.com/designs/42FEF60D-4088-4639-AA8F-8E4493D43F92#design" class="link-card" target="_blank">
+          <div class="link-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 2 7 12 12 22 7 12 2"></polygon><polyline points="2 17 12 22 22 17"></polyline><polyline points="2 12 12 17 22 12"></polyline></svg>
+          </div>
+          <div class="link-content">
+            <h3>Altium 365 Design</h3>
+            <p>View our PCB design files</p>
+          </div>
+        </a>
+        <a href="http://20.42.95.23:1880/#flow/73619fbf95fb2705" class="link-card" target="_blank">
+          <div class="link-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="3" width="20" height="14" rx="2" ry="2"></rect><line x1="8" y1="21" x2="16" y2="21"></line><line x1="12" y1="17" x2="12" y2="21"></line></svg>
+          </div>
+          <div class="link-content">
+            <h3>Node-RED Dashboard</h3>
+            <p>Interact with our cloud interface</p>
+          </div>
+        </a>
+      </div>
+    </div>
+
     <div class="video">
-      <h2>Demo Video</h2>
+      <h2>Rehabilitation Assistant</h2>
+      <p>Our hand exoskeleton improves user grip strength and finger dexterity, assisting stroke and neurological injury patients in regaining hand mobility. The device can be triggered either via EMG signal or remote Wi-Fi control, with an emergency stop button for safety.</p>
       <iframe src="https://www.youtube.com/embed/QpCnf6vj9Dw" title="Demo Video" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
     </div>
 
